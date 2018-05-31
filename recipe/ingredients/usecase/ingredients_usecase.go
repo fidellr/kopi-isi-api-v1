@@ -1,28 +1,26 @@
 package usecase
 
 import (
-	"fmt"
-
-	errorModel "github.com/kopi-isi-api-v1/model"
 	model "github.com/kopi-isi-api-v1/model/recipe"
 	"github.com/kopi-isi-api-v1/recipe"
 	"github.com/kopi-isi-api-v1/validator"
 )
 
-type ingridientUsecase struct {
-	ingRepos recipe.Ingridients
+type ingredientUsecase struct {
+	ingRepos recipe.Ingredients
 }
 
-func NewIngridientUsecase(ing recipe.Ingridients) recipe.Ingridients {
-	return &ingridientUsecase{
+func NewIngredientUsecase(ing recipe.Ingredients) recipe.Ingredients {
+	return &ingredientUsecase{
 		ingRepos: ing,
 	}
 }
 
-func (ingUse *ingridientUsecase) Save(ingPayload *model.IngridientMaster) (*model.IngridientMaster, map[string]string, error) {
+func (ingUse *ingredientUsecase) Save(ingPayload *model.IngredientMaster) (*model.IngredientMaster, map[string]string, error) {
 	if err := validator.Validate(ingPayload); err != nil {
 		return nil, nil, recipe.NewErrorInvalidRecipeData(err.Error())
 	}
+
 	ing, existedIng, err := ingUse.ingRepos.Save(ingPayload)
 	if err != nil {
 		return nil, nil, err
@@ -34,7 +32,7 @@ func (ingUse *ingridientUsecase) Save(ingPayload *model.IngridientMaster) (*mode
 	return ing, nil, nil
 }
 
-func (ingUse *ingridientUsecase) FindByID(id string) (*model.IngridientMaster, error) {
+func (ingUse *ingredientUsecase) FindByID(id string) (*model.IngredientMaster, error) {
 	ing, err := ingUse.ingRepos.FindByID(id)
 	if err != nil {
 		return nil, err
@@ -42,29 +40,24 @@ func (ingUse *ingridientUsecase) FindByID(id string) (*model.IngridientMaster, e
 	return ing, nil
 }
 
-func (ingUse *ingridientUsecase) FindAll() ([]*model.IngridientMaster, error) {
+func (ingUse *ingredientUsecase) FindAll() ([]*model.IngredientMaster, error) {
 	listOfIng, err := ingUse.ingRepos.FindAll()
 	if err != nil {
-		fmt.Println("err nih")
 		return nil, err
 	}
 	return listOfIng, nil
 }
 
-func (ingUse *ingridientUsecase) Update(id string, ingPayload *model.IngridientUpdate) (*model.IngridientUpdate, error) {
+func (ingUse *ingredientUsecase) Update(id string, ingPayload *model.IngredientUpdate) (*model.IngredientUpdate, error) {
+
 	ing, err := ingUse.ingRepos.Update(id, ingPayload)
 	if err != nil {
 		return nil, err
 	}
-	return ing, err
+	return ing, nil
 }
 
-func (ingUse *ingridientUsecase) Delete(id string) (bool, error) {
-	_, errFind := ingUse.FindByID(id)
-	if errFind != nil {
-		return false, errorModel.NOT_FOUND_ERROR
-	}
-
+func (ingUse *ingredientUsecase) Delete(id string) (bool, error) {
 	_, errDel := ingUse.ingRepos.Delete(id)
 	if errDel != nil {
 		return false, errDel

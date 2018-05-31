@@ -6,9 +6,13 @@ import (
 	"os"
 
 	"github.com/kopi-isi-api-v1/config"
-	httpIngridientDeliver "github.com/kopi-isi-api-v1/recipe/ingridients/delivery/http"
-	ingridientRepos "github.com/kopi-isi-api-v1/recipe/ingridients/repository"
-	_ingridientUsecases "github.com/kopi-isi-api-v1/recipe/ingridients/usecase"
+	httpIngredientDeliver "github.com/kopi-isi-api-v1/recipe/ingredients/delivery/http"
+	ingredientRepos "github.com/kopi-isi-api-v1/recipe/ingredients/repository"
+	_ingredientUsecases "github.com/kopi-isi-api-v1/recipe/ingredients/usecase"
+
+	httpCoffeeDeliver "github.com/kopi-isi-api-v1/recipe/coffee/delivery/http"
+	coffeeRepos "github.com/kopi-isi-api-v1/recipe/coffee/repository"
+	_coffeeUsecases "github.com/kopi-isi-api-v1/recipe/coffee/usecase"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 	"github.com/sirupsen/logrus"
@@ -27,9 +31,13 @@ func main() {
 		AllowMethods: []string{echo.GET, echo.HEAD, echo.PUT, echo.POST, echo.DELETE},
 	}))
 
-	ingridientRepo := ingridientRepos.NewIngridientsMongo(db, "ingridients")
-	ingridientUsecase := _ingridientUsecases.NewIngridientUsecase(ingridientRepo)
-	httpIngridientDeliver.NewIngridientHttpHandler(e, ingridientUsecase)
+	ingredientRepo := ingredientRepos.NewIngredientsMongo(db, "ingredients")
+	ingredientUsecase := _ingredientUsecases.NewIngredientUsecase(ingredientRepo)
+	httpIngredientDeliver.NewIngredientHttpHandler(e, ingredientUsecase)
+
+	coffeeRepo := coffeeRepos.NewCoffeeMongo(db, "coffee")
+	coffeeUsecase := _coffeeUsecases.NewCoffeeUsecase(coffeeRepo)
+	httpCoffeeDeliver.NewCoffeeHttpHandler(e, coffeeUsecase)
 
 	port := os.Getenv("PORT")
 	if port == "" {
