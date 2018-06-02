@@ -12,39 +12,41 @@ type CoffeeEntity struct {
 	UpdatedAt          time.Time        `json:"updated_at" bson:"updated_at"`
 	CoffeeName         string           `json:"coffee_name" bson:"coffee_name" validate:"required"`
 	Ingredient         []ingredientInfo `json:"ingredient" bson:"ingredient"`
-	TotalPricePerGlass int64            `json:"total_price_per_glass"`
-	TotalRRP           int64            `json:"total_rrp" bson:"total_rrp"`
+	TotalPricePerGlass float64          `json:"total_price_per_glass" bson:"total_price_per_glass"`
+	TotalRRP           float64          `json:"total_rrp" bson:"total_rrp"`
+	SellingPrice       float64          `json:"selling_price" bson:"selling_price"`
 	ThirdPartyRevenue  []thirdPartyInfo `json:"third_party_revenue" bson:"third_party_revenue"`
+	GrossPrice         float64          `json:"gross_price" bson:"gross_price"`
 	RealMargin         marginInfo       `json:"real_margin" bson:"real_margin"`
 	Marketing          mrktgInfo        `json:"marketing" bson:"marketing"`
+	NettProfit         float64          `json:"nett_profit" bson:"nett_profit"`
 }
 
 type ingredientInfo struct {
 	ID            bson.ObjectId `json:"id,omitempty" bson:"_id,omitempty"`
-	Name          string        `json:"ingredient_name" bson:"ingredient_name"`
+	Name          string        `json:"name" bson:"name"`
+	Gram          float64       `json:"gram" bson:"gram"`
+	Price         float64       `json:"price" bson:"price"`
 	Qty           int64         `json:"quantity" bson:"quantity"`
 	GramPerGlass  float64       `json:"gram_per_glass" bson:"gram_per_glass"`
-	PerGlass      int64         `json:"per_glass" bson:"per_glass"`
+	PerGlass      float64       `json:"per_glass" bson:"per_glass"`
 	PricePerGlass float64       `json:"price_per_glass" bson:"price_per_glass"`
 	TargetMargin  float64       `json:"target_margin" bson:"target_margin"`
-	RRP           int64         `json:"rrp" bson:"rrp"`
+	RRP           float64       `json:"rrp" bson:"rrp"`
 }
 
 type thirdPartyInfo struct {
-	CompanyName  string  `json:"company_name" bson:"company_name"`
-	SellingPrice int64   `json:"selling_price" bson:"selling_price"`
-	Percentage   float64 `json:"percentage" bson:"percentage"`
-	Value        int64   `json:"value" bson:"value"`
-	GrossPrice   int64   `json:"gross_price" bson:"gross_price"`
+	CompanyName string  `json:"company_name" bson:"company_name"`
+	Percentage  float64 `json:"percentage" bson:"percentage"`
+	Value       float64 `json:"value" bson:"value"`
 }
 
 type marginInfo struct {
-	HPP       int64 `json:"hpp" bson:"hpp"`
-	NettPrice int64 `json:"nett_price" bson:"nett_price"`
+	HPP       float64 `json:"hpp" bson:"hpp"`
+	NettPrice float64 `json:"nett_price" bson:"nett_price"`
 }
 
 type mrktgInfo struct {
 	Percentage float64 `json:"percentage" bson:"percentage"`
-	Value      int64   `json:"value" bson:"value"`
-	NettProfit int64   `json:"nett_profit" bson:"nett_profit"`
+	Value      float64 `json:"value" bson:"value"`
 }
