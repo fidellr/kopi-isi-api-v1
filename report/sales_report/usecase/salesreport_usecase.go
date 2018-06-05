@@ -25,17 +25,14 @@ func (srUse *salesReportUsecase) Save(srPayload *model.SalesReportEntity) (*mode
 
 	// Sales cash calculations
 	srPayC := srPayload.PaymentChannel
-	var cash float64
-	for k := range srPayC {
-		cash = math.Round(srPayload.Price * srPayload.Quantity)
-		srPayC[k].Cash = cash
-	}
+	srPayC.Cash = math.Round(srPayload.Price * srPayload.Quantity)
 
-	// Sales Go food calculations (TODO: terusin dari sini!)
+	// Sales Go food calculations
 	srGF := srPayload.GoFood
-	for k := range srGF {
-		srGF[k].Value = math.Round(cash * srGF[k].Percentage / 100)
-	}
+	srGF.Value = math.Round(srPayC.Cash * srGF.Percentage / 100)
+
+	// Fix Gross Income that should be the result of SUM Cash and Gofood value
+	srPayload.RealMargin.FinalHPP = srPayload.Final.GrossIncome
 
 	sr, err := srUse.srRepos.Save(srPayload)
 	if err != nil {

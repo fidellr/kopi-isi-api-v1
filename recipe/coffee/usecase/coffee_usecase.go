@@ -27,17 +27,25 @@ func (cofUse *coffeeUsecase) Save(cofPayload *model.CoffeeEntity) (*model.Coffee
 	// Ingredient calculations
 	cing := cofPayload.Ingredient
 	var totalRrp float64
+	var totalPricePerglass float64
 	for k := range cing {
 		if cing[k].PerGlass == 0 {
 			cing[k].PerGlass = math.Round(cing[k].Gram / cing[k].GramPerGlass)
 		}
-
-		cing[k].PricePerGlass = math.Round(cing[k].Price / cing[k].PerGlass)
-		cing[k].RRP = math.Round(cing[k].PricePerGlass * cing[k].TargetMargin / 100)
-		cofPayload.TotalPricePerGlass += cing[k].PricePerGlass
-		totalRrp += cing[k].RRP
+		if cing[k].Qty > 1 {
+			cing[k].PricePerGlass = math.Round((cing[k].Price / cing[k].PerGlass) * cing[k].Qty)
+			cing[k].RRP = math.Round((cing[k].PricePerGlass * cing[k].TargetMargin / 100) * cing[k].Qty)
+			totalPricePerglass += cing[k].PricePerGlass
+			totalRrp += cing[k].RRP
+		} else {
+			cing[k].PricePerGlass = math.Round(cing[k].Price / cing[k].PerGlass)
+			cing[k].RRP = math.Round(cing[k].PricePerGlass * cing[k].TargetMargin / 100)
+			totalPricePerglass += cing[k].PricePerGlass
+			totalRrp += cing[k].RRP
+		}
+		cofPayload.TotalRRP = totalRrp
+		cofPayload.TotalPricePerGlass = totalPricePerglass
 	}
-	cofPayload.TotalRRP = totalRrp
 
 	// ThirdPartyRevenue calculations
 	cThirdRev := cofPayload.ThirdPartyRevenue

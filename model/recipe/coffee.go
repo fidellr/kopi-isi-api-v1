@@ -27,7 +27,7 @@ type ingredientInfo struct {
 	Name          string        `json:"name" bson:"name"`
 	Gram          float64       `json:"gram" bson:"gram"`
 	Price         float64       `json:"price" bson:"price"`
-	Qty           int64         `json:"quantity" bson:"quantity"`
+	Qty           float64       `json:"quantity" bson:"quantity"`
 	GramPerGlass  float64       `json:"gram_per_glass" bson:"gram_per_glass"`
 	PerGlass      float64       `json:"per_glass" bson:"per_glass"`
 	PricePerGlass float64       `json:"price_per_glass" bson:"price_per_glass"`
